@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
 
 import eden.sun.crawler.exception.CrawlerException;
 import eden.sun.crawler.fiveonevoa.dto.Article;
+import eden.sun.crawler.fiveonevoa.dto.ArticleDetail;
 import eden.sun.crawler.fiveonevoa.dto.Menu;
 import eden.sun.crawler.util.ErrorCode;
 
@@ -36,15 +37,9 @@ public class Crawler {
 	}
 	
 	public void init() throws CrawlerException{
-		try {
-			logger.info("fetching html from " + SOURCE_URL);
-			homeDoc = Jsoup.connect(SOURCE_URL).timeout(CONNECT_TIMEOUT).get();
-			logger.info("fetching html from " + SOURCE_URL + " done.");
-			
-		} catch (IOException e) {
-			logger.error("Initialize 51voa crawler error.",e);
-			throw new CrawlerException("Initialize 51voa crawler error.",ErrorCode.INIT_ERROR,e);
-		}
+		logger.info("fetching html from " + SOURCE_URL);
+		homeDoc = getDocumentFromUrl(SOURCE_URL);
+		logger.info("fetching html from " + SOURCE_URL + " done.");
 	}
 	
 	public List<Menu> loadMenuList() throws CrawlerException{
@@ -148,5 +143,29 @@ public class Crawler {
 			return articles;
 		}
 		return null;
+	}
+	
+	public ArticleDetail loadArticleDetail(String articleUrl) throws CrawlerException{
+		ArticleDetail articleDetail = new ArticleDetail();
+		Document doc = getDocumentFromUrl(articleUrl);
+		
+		Element contentElement = doc.getElementById("content");
+		
+		Element mp3Element = doc.getElementById("mp3");
+		
+		Element lrcElement = doc.getElementById("lrc");
+		
+		return null;
+		
+	}
+
+	private Document getDocumentFromUrl(String url) throws CrawlerException {
+		try {
+			Document doc = Jsoup.connect(url).timeout(CONNECT_TIMEOUT).get();
+			return doc;
+		} catch (IOException e) {
+			logger.error(e);
+			throw new CrawlerException("Fetch document error. URL:" + url,ErrorCode.FETCH_DOCUMENT_ERROR);
+		}
 	}
 }

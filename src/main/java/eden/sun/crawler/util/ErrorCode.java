@@ -6,5 +6,6 @@ public class ErrorCode {
 	public static final String INIT_ERROR = "001";
 	public static final String EMPTY_DOCUMENT_ERROR = "002";
 	public static final String PARSE_HTML_ERROR = "003";
+	public static final String FETCH_DOCUMENT_ERROR = "004";
 
 }
